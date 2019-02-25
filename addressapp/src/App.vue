@@ -7,7 +7,7 @@
 
 <script>
 import EventBus from "./EventBus.js";
-import axios from "axios";
+// import axios from "axios";
 import ContactList from "./components/ContactList";
 import AddContact from "./components/AddContact";
 import UpdateContact from "./components/UpdateContact";
@@ -49,6 +49,7 @@ export default {
     EventBus.$on("cancelForm", () => (this.currentView = null));
     EventBus.$on("updateContactSubmit", contact => this.updateSubmit(contact));
     EventBus.$on("delContact", no => this.delContact(no));
+    EventBus.$on("changePage", no => this.changePage(no));
   },
   methods: {
     changedPage() {
@@ -56,7 +57,7 @@ export default {
       this.fetchContact();
     },
     fetchContact() {
-      axios
+      this.$axios
         .get("/api/contacts", {
           params: {
             pageno: 1,
@@ -72,7 +73,7 @@ export default {
     addContact(contact) {
       // debugger;
       // console.log(contact);
-      axios
+      this.$axios
         .post("/api/contacts", contact)
         .then(res => {
           console.log(res);
@@ -84,7 +85,7 @@ export default {
         .catch(err => console.log("addcontact Err: ", err));
     },
     updateContact(no) {
-      axios
+      this.$axios
         .get(`/api/contacts/${no}`)
         .then(res => {
           console.log(res);
@@ -93,7 +94,7 @@ export default {
         .catch(err => console.log("updateContact Err: ", err));
     },
     updateSubmit(contact) {
-      axios
+      this.$axios
         .put("/api/contacts/${no}".replace("${no}", contact.no), contact)
         .then(res => {
           this.fetchContact();
@@ -102,13 +103,24 @@ export default {
         .catch(err => console.log("updateSubmit Err: ", err));
     },
     delContact(no) {
-      axios
+      this.$axios
         .delete("/api/contacts/${no}".replace("${no}", no))
         .then(res => {
           console.log(res);
           this.changedPage();
         })
         .catch(err => console.log("delContact Err: ", err));
+    },
+    changePage(no) {
+      this.contactList.pageno = no;
+      this.$axios
+        .get(`/api/contacts`, {
+          params: {
+            pageno: no
+          }
+        })
+        .then(res => (this.contactList.contacts = res.data.contacts))
+        .catch(err => console.log("changePage Err: ", err));
     }
   }
 };

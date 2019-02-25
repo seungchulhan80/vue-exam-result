@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "vue": "^2.6.6"
+    "bootstrap": "^3.3.7",
+    "vue": "^2.6.6",
+    "vuejs-paginate": "^2.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",

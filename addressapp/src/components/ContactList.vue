@@ -31,13 +31,34 @@
         </tbody>
       </table>
     </div>
+    <Paginate
+      ref="pagebuttons"
+      :page-count="totalCount"
+      :page-range="5"
+      :prev-text="'Prev'"
+      :next-text="'Next'"
+      :container-class="'pagination'"
+      :page-class="'page-item'"
+      :click-handler="changePage"
+    ></Paginate>
   </div>
 </template>
 <script>
 import EventBus from "../EventBus.js";
+import Paginate from "vuejs-paginate";
 export default {
   name: "ContactList",
   props: ["contactList"],
+  components: {
+    Paginate
+  },
+  computed: {
+    totalCount() {
+      return Math.floor(
+        this.contactList.totalcount / this.contactList.pagesize
+      );
+    }
+  },
   methods: {
     addContact() {
       // debugger;
@@ -50,6 +71,9 @@ export default {
       if (confirm("really?")) {
         EventBus.$emit("delContact", no);
       }
+    },
+    changePage(no) {
+      EventBus.$emit("changePage", no);
     }
   }
 };
