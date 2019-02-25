@@ -48,6 +48,7 @@ export default {
     });
     EventBus.$on("cancelForm", () => (this.currentView = null));
     EventBus.$on("updateContactSubmit", contact => this.updateSubmit(contact));
+    EventBus.$on("delContact", no => this.delContact(no));
   },
   methods: {
     changedPage() {
@@ -99,6 +100,15 @@ export default {
           this.currentView = null;
         })
         .catch(err => console.log("updateSubmit Err: ", err));
+    },
+    delContact(no) {
+      axios
+        .delete("/api/contacts/${no}".replace("${no}", no))
+        .then(res => {
+          console.log(res);
+          this.changedPage();
+        })
+        .catch(err => console.log("delContact Err: ", err));
     }
   }
 };

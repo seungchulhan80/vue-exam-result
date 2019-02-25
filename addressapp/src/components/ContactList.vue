@@ -25,7 +25,7 @@
             </td>
             <td>
               <button type="button" @click="updateContact(contact.no)">수정</button>
-              <button type="button">삭제</button>
+              <button type="button" @click="delContact(contact.no)">삭제</button>
             </td>
           </tr>
         </tbody>
@@ -45,6 +45,11 @@ export default {
     },
     updateContact(no) {
       EventBus.$emit("updateContact", no);
+    },
+    delContact(no) {
+      if (confirm("really?")) {
+        EventBus.$emit("delContact", no);
+      }
     }
   }
 };
